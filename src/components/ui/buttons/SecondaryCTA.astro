@@ -1,0 +1,65 @@
+---
+const { title, url } = Astro.props
+interface Props {
+  title?: string
+  url?: string
+}
+const baseClasses = 'inline-flex items-center justify-center gap-x-2 rounded-lg px-4 py-3 text-center text-sm font-medium shadow-sm outline-none ring-zinc-500 focus-visible:ring transition duration-300'
+const borderClasses = 'border'
+const bgColorClasses = 'ww2-btn-secondary'
+const disableClasses = 'disabled:pointer-events-none disabled:opacity-50'
+const fontSizeClasses = '2xl:text-base'
+const ringClasses = 'ring-zinc-500'
+const ww2FontClasses = 'ww2-btn-font'
+const darkClasses = 'dark:ring-zinc-200 dark:focus:outline-none'
+---
+<a
+    class={`${baseClasses} ${borderClasses} ${bgColorClasses} ${disableClasses} ${fontSizeClasses} ${ringClasses} ${ww2FontClasses} ${darkClasses}`}
+    href={url}
+>
+    {title}
+</a>
+
+<style>
+  /* Importar fuente Oswald */
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+  /* Aplicar estilos WW2 Bites */
+  .ww2-btn-font {
+    font-family: 'Oswald', sans-serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+  }
+
+  /* Secondary Button - Beige con texto rojo */
+  .ww2-btn-secondary {
+    background-color: #e6dfd1 !important; /* Fondo beige */
+    color: #b3413e !important; /* Texto rojo */
+    border-color: #b3413e !important; /* Borde rojo */
+  }
+
+  .ww2-btn-secondary:hover {
+    background-color: #b3413e !important; /* Fondo rojo en hover */
+    color: #e6dfd1 !important; /* Texto beige en hover */
+    border-color: #b3413e !important; /* Mantener borde rojo en hover */
+  }
+
+  .ww2-btn-secondary:active {
+    background-color: #b3413e !important; /* Fondo rojo en active también */
+    color: #e6dfd1 !important; /* Texto beige en active */
+    border-color: #b3413e !important; /* Mantener borde rojo en active */
+  }
+
+  /* Elementos hijos rojos en estado normal */
+  .ww2-btn-secondary *,
+  .ww2-btn-font * {
+    color: #b3413e !important;
+  }
+
+  /* Override para hover - elementos hijos en beige */
+  .ww2-btn-secondary:hover *,
+  .ww2-btn-secondary:active * {
+    color: #e6dfd1 !important;
+  }
+</style>

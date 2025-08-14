@@ -1,0 +1,714 @@
+---
+import BrandLogo from '@components/ui/logos/BrandLogo.astro'
+import { SITE } from '@/config'
+---
+
+<!-- WW2 Bites Navbar Wrapper -->
+<div class="ww2-navbar-wrapper">
+    <!-- Navbar Principal -->
+    <nav class="ww2-navbar">
+        <div class="ww2-navbar-container">
+            <!-- Logo y Título -->
+            <div class="ww2-logo" data-action="home" role="button" tabindex="0" aria-label="Ir al inicio">
+                <BrandLogo class="ww2-logo-icon" />
+                <span class="ww2-logo-text">WW2 Bites</span>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="ww2-menu-desktop">
+                <button class="ww2-menu-item" data-action="scroll" data-section="home">HOME</button>
+                <button class="ww2-menu-item" data-action="navigate" data-url="/bites">BITES</button>
+                <button class="ww2-menu-item" data-action="navigate" data-url="/categories">CATEGORIES</button>
+                <button class="ww2-menu-item" data-action="navigate" data-url="/about">ABOUT</button>
+                <button class="ww2-btn-primary" data-action="newsletter">NEWSLETTER</button>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button class="ww2-mobile-menu-btn" aria-label="Abrir menú" aria-expanded="false">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="ww2-mobile-overlay" aria-hidden="true"></div>
+    
+    <!-- Mobile Menu Drawer -->
+    <div class="ww2-mobile-drawer">
+        <div class="ww2-mobile-drawer-content">
+            <div class="ww2-mobile-menu-items">
+                <button class="ww2-mobile-menu-item" data-action="scroll" data-section="home">HOME</button>
+                <button class="ww2-mobile-menu-item" data-action="navigate" data-url="/bites">BITES</button>
+                <button class="ww2-mobile-menu-item" data-action="navigate" data-url="/categories">CATEGORIES</button>
+                <button class="ww2-mobile-menu-item" data-action="navigate" data-url="/about">ABOUT</button>
+                <div class="ww2-mobile-btn-container">
+                    <button class="ww2-mobile-btn-primary" data-action="newsletter">NEWSLETTER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&family=Oswald:wght@700&display=swap');
+
+    /* ===== RESET PARA WW2 BITES ===== */
+    .ww2-navbar-wrapper {
+        all: initial !important;
+        display: block !important;
+        font-family: 'Source Serif Pro', serif !important;
+    }
+
+    .ww2-navbar-wrapper *:not(svg):not(path) {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        font-size: 100% !important;
+        font: inherit !important;
+        vertical-align: baseline !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ===== NAVBAR PRINCIPAL ===== */
+    .ww2-navbar-wrapper .ww2-navbar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 100 !important;
+        background: #e6dfd1 url('/src/images/paper-texture.webp') center/cover !important;
+        padding: 16px 0 !important;
+        transition: all 0.3s ease !important;
+        display: block !important;
+        overflow-x: hidden !important;
+        width: 100vw !important;
+        margin-left: calc(-50vw + 50%) !important;
+        margin-right: calc(-50vw + 50%) !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-navbar.scrolled {
+        background: rgba(230, 223, 209, 0.90) url('/src/images/paper-texture.webp') center/cover !important;
+        backdrop-filter: blur(30px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+        border-bottom: 3px solid #b3413e !important;
+        padding: 8px 0 !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-navbar-container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 auto !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* ===== LOGO ===== */
+    .ww2-navbar-wrapper .ww2-logo {
+        display: flex !important;
+        align-items: center !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        flex-shrink: 0 !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-logo-icon {
+        width: 40px !important;
+        height: 40px !important;
+        margin-right: 12px !important;
+        object-fit: contain !important;
+        display: block !important;
+        flex-shrink: 0 !important;
+        border-radius: 50% !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-logo-text {
+        font-family: 'Oswald', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 24px !important;
+        line-height: 32px !important;
+        color: #b3413e !important;
+        display: inline-block !important;
+        white-space: nowrap !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+    }
+
+    /* ===== MENÚ DESKTOP ===== */
+    .ww2-navbar-wrapper .ww2-menu-desktop {
+        display: none !important;
+        align-items: center !important;
+        gap: 32px !important;
+        flex-shrink: 1 !important;
+        min-width: 0 !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-menu-item {
+        color: #454545 !important;
+        text-decoration: none !important;
+        font-family: 'Oswald', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 20px !important;
+        line-height: 28px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        background: none !important;
+        border: none !important;
+        padding: 8px 12px !important;
+        border-radius: 6px !important;
+        white-space: nowrap !important;
+        display: inline-block !important;
+        flex-shrink: 0 !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-menu-item:hover {
+        color: #b3413e !important;
+        background-color: transparent !important;
+    }
+
+    /* ===== BOTÓN NEWSLETTER ===== */
+    .ww2-navbar-wrapper .ww2-btn-primary {
+        background: transparent !important;
+        color: #b3413e !important;
+        border: 2px solid #b3413e !important;
+        padding: 8px 24px !important;
+        border-radius: 8px !important;
+        font-family: 'Oswald', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 20px !important;
+        line-height: 28px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-btn-primary:hover {
+        background: #b3413e !important;
+        color: #e6dfd1 !important;
+    }
+
+    /* ===== BOTÓN MENÚ MÓVIL ===== */
+    .ww2-navbar-wrapper .ww2-mobile-menu-btn {
+        display: block !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        z-index: 999999 !important;
+        position: relative !important;
+        color: #454545 !important;
+        flex-shrink: 0 !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-menu-btn:hover {
+        color: #ffffff !important;
+        background-color: #b3413e !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-menu-btn svg {
+        width: 24px !important;
+        height: 24px !important;
+        vertical-align: middle !important;
+        display: block !important;
+        fill: none !important;
+        stroke: currentColor !important;
+        stroke-width: 2 !important;
+        stroke-linecap: round !important;
+        stroke-linejoin: round !important;
+    }
+
+    /* ===== OVERLAY Y DRAWER MÓVIL ===== */
+    .ww2-navbar-wrapper .ww2-mobile-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        z-index: 9999 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.3s ease !important;
+        pointer-events: none !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-overlay.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-drawer {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        height: 100vh !important;
+        width: 280px !important;
+        background: #e6dfd1 url('/src/images/paper-texture.webp') center/cover !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+        transform: translateX(100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        z-index: 99999 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        border-left: 3px solid #b3413e !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-drawer.active {
+        transform: translateX(0) !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-drawer-content {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        padding: 20px !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-menu-items {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        flex: 1 !important;
+        overflow-y: auto !important;
+        padding-top: 60px !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-menu-item {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        padding: 18px 20px !important;
+        color: #454545 !important;
+        border: none !important;
+        border-radius: 8px !important;
+        background: transparent !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
+        font-family: 'Oswald', sans-serif !important;
+        font-size: 24px !important;
+        line-height: 32px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-menu-item:hover {
+        color: #b3413e !important;
+        background-color: transparent !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-btn-container {
+        padding-top: 20px !important;
+        /* Separador eliminado - border-top removido */
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-btn-primary {
+        width: 100% !important;
+        background: #b3413e !important;
+        color: #e6dfd1 !important;
+        padding: 12px 24px !important;
+        border-radius: 8px !important;
+        font-family: 'Oswald', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 24px !important;
+        line-height: 32px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        text-align: center !important;
+        border: 2px solid #b3413e !important;
+        cursor: pointer !important;
+        display: block !important;
+    }
+
+    .ww2-navbar-wrapper .ww2-mobile-btn-primary:hover {
+        background: transparent !important;
+        color: #b3413e !important;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 640px) {
+        .ww2-navbar-wrapper .ww2-navbar-container {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .ww2-navbar-wrapper .ww2-menu-desktop {
+            display: flex !important;
+        }
+
+        .ww2-navbar-wrapper .ww2-mobile-menu-btn {
+            display: none !important;
+        }
+
+        .ww2-navbar-wrapper .ww2-mobile-overlay,
+        .ww2-navbar-wrapper .ww2-mobile-drawer {
+            display: none !important;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .ww2-navbar-wrapper .ww2-navbar-container {
+            padding-left: 32px !important;
+            padding-right: 32px !important;
+        }
+
+        .ww2-navbar-wrapper .ww2-menu-desktop {
+            gap: 40px !important;
+        }
+
+        .ww2-navbar-wrapper .ww2-logo-text {
+            font-size: 28px !important;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .ww2-navbar-wrapper .ww2-navbar-container {
+            padding-left: 48px !important;
+            padding-right: 48px !important;
+        }
+    }
+
+    /* ===== UTILIDADES ===== */
+    html {
+        scroll-behavior: smooth !important;
+        overflow-x: hidden !important;
+    }
+
+    body {
+        padding-top: 80px !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Focus states para accesibilidad */
+    .ww2-navbar-wrapper .ww2-menu-item:focus,
+    .ww2-navbar-wrapper .ww2-btn-primary:focus,
+    .ww2-navbar-wrapper .ww2-mobile-menu-btn:focus,
+    .ww2-navbar-wrapper .ww2-mobile-menu-item:focus,
+    .ww2-navbar-wrapper .ww2-mobile-btn-primary:focus,
+    .ww2-navbar-wrapper .ww2-menu-item:active,
+    .ww2-navbar-wrapper .ww2-mobile-menu-item:active {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+</style>
+
+<script>
+// ===== WW2 BITES NAVBAR FUNCTIONALITY =====
+(function() {
+    'use strict';
+    
+    function initWhenReady() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initNavbar, 100);
+            });
+        } else {
+            setTimeout(initNavbar, 100);
+        }
+    }
+    
+    function initNavbar() {
+        console.log('WW2 Bites Navbar: Inicializando...');
+        
+        if (window.WW2NavbarInitialized) {
+            console.log('WW2 Navbar: Ya inicializado, saliendo...');
+            return;
+        }
+        
+        // Elements
+        const wrapper = document.querySelector('.ww2-navbar-wrapper');
+        if (!wrapper) {
+            console.error('WW2 Navbar: Wrapper no encontrado');
+            return;
+        }
+        
+        const navbar = wrapper.querySelector('.ww2-navbar');
+        const mobileMenuBtn = wrapper.querySelector('.ww2-mobile-menu-btn');
+        const mobileOverlay = wrapper.querySelector('.ww2-mobile-overlay');
+        const mobileDrawer = wrapper.querySelector('.ww2-mobile-drawer');
+        const logo = wrapper.querySelector('.ww2-logo');
+        
+        if (!navbar || !mobileMenuBtn || !mobileOverlay || !mobileDrawer || !logo) {
+            console.error('WW2 Navbar: Elementos requeridos no encontrados');
+            return;
+        }
+        
+        // State
+        let isScrolled = false;
+        let isMobileMenuOpen = false;
+        let scrollTimeout = null;
+        
+        // Función de scroll optimizada
+        function handleScroll() {
+            if (scrollTimeout) {
+                cancelAnimationFrame(scrollTimeout);
+            }
+            
+            scrollTimeout = requestAnimationFrame(function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                
+                if (scrollTop > 20 && !isScrolled) {
+                    isScrolled = true;
+                    navbar.classList.add('scrolled');
+                } else if (scrollTop <= 20 && isScrolled) {
+                    isScrolled = false;
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+        
+        // Mobile menu functions
+        function openMobileMenu() {
+            if (isMobileMenuOpen) return;
+            
+            isMobileMenuOpen = true;
+            mobileOverlay.classList.add('active');
+            mobileDrawer.classList.add('active');
+            
+            // Prevenir scroll del body
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = scrollBarWidth + 'px';
+            
+            // Update button icon to X
+            const icon = mobileMenuBtn.querySelector('svg');
+            if (icon) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+            }
+            
+            // Update aria attributes
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            mobileMenuBtn.setAttribute('aria-label', 'Cerrar menú');
+        }
+        
+        function closeMobileMenu() {
+            if (!isMobileMenuOpen) return;
+            
+            isMobileMenuOpen = false;
+            mobileOverlay.classList.remove('active');
+            mobileDrawer.classList.remove('active');
+            
+            // Restaurar scroll del body
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            
+            // Update button icon to hamburger
+            const icon = mobileMenuBtn.querySelector('svg');
+            if (icon) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+            }
+            
+            // Update aria attributes
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            mobileMenuBtn.setAttribute('aria-label', 'Abrir menú');
+        }
+        
+        function toggleMobileMenu() {
+            if (isMobileMenuOpen) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+        
+        // Navigation functions
+        function handleNavigation(url) {
+            window.location.href = url;
+            closeMobileMenu();
+        }
+        
+        function handleNewsletterClick() {
+            window.location.href = '/newsletter';
+            closeMobileMenu();
+        }
+        
+        function handleHomeClick() {
+            window.location.href = '/';
+            closeMobileMenu();
+        }
+        
+        function handleScrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            closeMobileMenu();
+        }
+        
+        // Event listeners
+        try {
+            // Scroll listener
+            let ticking = false;
+            function optimizedScrollHandler() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
+            
+            // Mobile menu button
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
+            
+            // Mobile overlay
+            mobileOverlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMobileMenu();
+            });
+            
+            // Logo click
+            logo.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleHomeClick();
+            });
+            
+            // Event delegation
+            wrapper.addEventListener('click', function(e) {
+                const actionElement = e.target.closest('[data-action]');
+                if (!actionElement) return;
+                
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const action = actionElement.getAttribute('data-action');
+                const url = actionElement.getAttribute('data-url');
+                const section = actionElement.getAttribute('data-section');
+                
+                try {
+                    switch (action) {
+                        case 'navigate':
+                            if (url) {
+                                handleNavigation(url);
+                            }
+                            break;
+                        case 'newsletter':
+                            handleNewsletterClick();
+                            break;
+                        case 'home':
+                            handleHomeClick();
+                            break;
+                        case 'scroll':
+                            if (section === 'home') {
+                                handleScrollToTop();
+                            }
+                            break;
+                    }
+                } catch (error) {
+                    console.error('WW2 Navbar: Error al manejar acción:', error);
+                }
+            });
+            
+            // Close mobile menu on window resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    if (window.innerWidth >= 768 && isMobileMenuOpen) {
+                        closeMobileMenu();
+                    }
+                }, 250);
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isMobileMenuOpen) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Initialize scroll state
+            handleScroll();
+            
+            // Marcar como inicializado
+            window.WW2NavbarInitialized = true;
+            
+            console.log('WW2 Bites Navbar: Inicialización completada');
+            
+        } catch (error) {
+            console.error('WW2 Navbar: Error durante la inicialización:', error);
+        }
+    }
+    
+    // Public API
+    window.WW2Navbar = {
+        version: '1.0.0-ww2-bites',
+        initialized: false,
+        
+        scrollToTop: function() {
+            try {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.error('WW2 Navbar: Error al hacer scroll al top:', error);
+            }  
+        },
+        
+        openNewsletter: function() {
+            try {
+                window.location.href = '/newsletter';
+            } catch (error) {
+                console.error('WW2 Navbar: Error al abrir newsletter:', error);
+            }
+        },
+        
+        closeMobileMenu: function() {
+            try {
+                const closeBtn = document.querySelector('.ww2-navbar-wrapper .ww2-mobile-overlay');
+                if (closeBtn) {
+                    closeBtn.click();
+                }
+            } catch (error) {
+                console.error('WW2 Navbar: Error al cerrar menú móvil:', error);
+            }
+        },
+        
+        reinitialize: function() {
+            try {
+                window.WW2NavbarInitialized = false;
+                initNavbar();
+            } catch (error) {
+                console.error('WW2 Navbar: Error al reinicializar:', error);
+            }
+        }
+    };
+    
+    // Inicializar
+    initWhenReady();
+    
+})();
+</script>

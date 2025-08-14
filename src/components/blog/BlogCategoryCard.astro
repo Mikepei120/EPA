@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets'
+import atlanticImage from '@/images/atlantic.webp'
+import easternFrontImage from '@/images/eastern-front.webp'
+import northAfrikaImage from '@/images/north-afrika.webp'
+import pacificImage from '@/images/pacific.webp'
+import westernEuropeImage from '@/images/western-europe.webp'
+
+interface Props {
+    slug: string
+    title: string
+    description: string
+    count: number
+    publishDate: string
+    layoutPattern?: {
+        smCol: number
+        mdCol: number
+        row: number
+        index: number
+    }
+}
+
+const { slug } = Astro.props
+
+// Mapeo de slugs a imágenes - Verificar que coincidan exactamente
+const categoryImages: Record<string, any> = {
+    'atlantic': atlanticImage,
+    'eastern-front': easternFrontImage,
+    'north-afrika': northAfrikaImage,
+    'northafrika': northAfrikaImage, // Agregamos ambas variantes por si acaso
+    'pacific': pacificImage,
+    'western-europe': westernEuropeImage,
+}
+
+const categoryImage = categoryImages[slug]
+
+// Debug: mostrar en consola qué slug estamos buscando
+console.log('Buscando imagen para slug:', slug, 'Imagen encontrada:', !!categoryImage)
+---
+
+<div class="px-2 py-3 sm:px-4 sm:py-4">
+    <a 
+        href={`/categories/${slug}`}
+        class="block w-full h-64 sm:h-64 md:h-72 overflow-hidden transition-transform duration-300 hover:scale-105"
+    >
+        {categoryImage ? (
+            <Image 
+                src={categoryImage}
+                alt={slug}
+                class="w-full h-full object-cover"
+                widths={[400, 600, 800]}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                loading="lazy"
+                format="webp"
+            />
+        ) : (
+            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span class="text-gray-500">No image: {slug}</span>
+            </div>
+        )}
+    </a>
+</div>

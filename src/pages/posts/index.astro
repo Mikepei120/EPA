@@ -1,0 +1,332 @@
+---
+import { getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import BaseLayout from '@layouts/BaseLayout.astro'
+import BlogCard from '@components/blog/BlogCard.astro'
+import BlogFeaturedArticle from '@components/blog/BlogFeaturedArticle.astro'
+import MainSection from '@components/ui/sections/MainSection.astro'
+import { SITE } from '@/config'
+
+const posts: CollectionEntry<'posts'>[] = (await getCollection('posts')).sort(
+    (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+)
+
+const selectedPosts: CollectionEntry<'posts'>[] = posts.filter(p => p.data.selected)
+
+// Extraer todos los tags únicos de todos los posts para el filtrado
+const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
+
+const description = 'Explora todos los artículos sobre la Segunda Guerra Mundial. Filtra por hashtags para encontrar contenido específico sobre batallas, campañas y eventos históricos.'
+const URL = Astro.url.href
+---
+
+<BaseLayout
+    title="Todos los Posts - WW2 Bites"
+    description={description}
+    structuredData={{
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        'inLanguage': 'es-ES',
+        '@id': URL,
+        'url': URL,
+        'name': `Todos los Posts - ${SITE.title}`,
+        'description': description,
+        'isPartOf': {
+            '@type': 'WebSite',
+            'url': SITE.url,
+            'name': SITE.title,
+            'description': SITE.description,
+        },
+    }}
+>
+    <MainSection
+        title="Archivo Histórico"
+        subTitle="Explora todos los relatos de la Segunda Guerra Mundial - Filtra por hashtags para encontrar contenido específico"
+        btnExists={true}
+        btnTitle="Línea de Tiempo"
+        btnURL="/timeline"
+    />
+
+    <!-- Sistema de Filtrado Integrado -->
+    <section class="py-8">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="posts-filter-container mb-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-700 rounded-xl border border-amber-200 dark:border-neutral-600">
+                <!-- Buscador de tags -->
+                <div class="mb-6">
+                    <label for="tag-search" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        🔍 Buscar por hashtag
+                    </label>
+                    <input
+                        type="text"
+                        id="tag-search"
+                        placeholder="Escribe un hashtag para buscar..."
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-neutral-700 dark:text-white transition-all duration-300"
+                    />
+                </div>
+
+                <!-- Selección de tags -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                        🏷️ Filtrar por hashtags
+                    </h3>
+                    <div class="flex flex-wrap gap-2" id="tags-container">
+                        <button
+                            class="tag-filter-btn active px-3 py-2 text-sm font-medium rounded-full border-2 transition-all duration-300 bg-red-600 text-white border-red-600 hover:bg-red-700"
+                            data-tag="all"
+                        >
+                            Todos los posts
+                        </button>
+                        {allTags.map(tag => (
+                            <button
+                                class="tag-filter-btn px-3 py-2 text-sm font-medium rounded-full border-2 transition-all duration-300 bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-neutral-600 dark:text-gray-200 dark:border-neutral-500 dark:hover:bg-neutral-500"
+                                data-tag={tag}
+                            >
+                                #{tag}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <!-- Contador de resultados -->
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <span id="results-count">Mostrando {posts.length} posts</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Todos los Posts con Filtrado -->
+    <section class="py-14 lg:py-24">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <!-- Grid de posts -->
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" id="posts-grid">
+                {posts.map((blog) => (
+                    <div 
+                        class="blog-card-wrapper"
+                        data-tags={blog.data.tags?.join(',') || ''}
+                    >
+                        <BlogCard blog={blog} />
+                    </div>
+                ))}
+            </div>
+
+            <!-- Mensaje cuando no hay resultados -->
+            <div id="no-results" class="hidden text-center py-12">
+                <div class="max-w-md mx-auto">
+                    <div class="text-6xl mb-4">🔍</div>
+                    <h3 class="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        No se encontraron posts
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Intenta con otros hashtags o limpia los filtros
+                    </p>
+                    <button 
+                        id="clear-filters"
+                        class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                        Limpiar filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Posts destacados (solo si existen) -->
+    {selectedPosts.length > 0 && (
+        <section class="py-14 lg:py-24 bg-gradient-to-b from-amber-50 to-orange-50 dark:from-neutral-900 dark:to-neutral-800">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                        📌 Posts Destacados
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300">
+                        Artículos seleccionados por su relevancia histórica
+                    </p>
+                </div>
+                <BlogFeaturedArticle posts={selectedPosts} />
+            </div>
+        </section>
+    )}
+</BaseLayout>
+
+<style>
+/* Estilos para el contenedor de filtros */
+.posts-filter-container {
+    background-image: url('/src/images/paper-texture.webp');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.tag-filter-btn.active {
+    background-color: var(--ww2-color-primary, #b3413e) !important;
+    color: white !important;
+    border-color: var(--ww2-color-primary, #b3413e) !important;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(179, 65, 62, 0.3);
+}
+
+.tag-filter-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#tag-search:focus {
+    box-shadow: 0 0 0 3px rgba(179, 65, 62, 0.1);
+}
+
+/* Estilos para las cards de blog */
+.blog-card-wrapper {
+    transition: all 0.3s ease;
+}
+
+.blog-card-wrapper[style*="display: none"] {
+    display: none !important;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Estilos adicionales para la página de posts */
+.posts-page-header {
+    background-image: url('/src/images/paper-texture.webp');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tagButtons = document.querySelectorAll('.tag-filter-btn');
+    const searchInput = document.getElementById('tag-search') as HTMLInputElement;
+    const resultsCount = document.getElementById('results-count');
+    const blogCards = document.querySelectorAll('.blog-card-wrapper');
+    const noResultsMessage = document.getElementById('no-results');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+
+    let activeTag = 'all';
+    let searchTerm = '';
+
+    // Función para filtrar posts
+    function filterPosts() {
+        let visibleCount = 0;
+
+        blogCards.forEach(card => {
+            const cardElement = card as HTMLElement;
+            const postTags = cardElement.dataset.tags?.split(',') || [];
+            
+            let showCard = true;
+
+            // Filtrar por tag activo
+            if (activeTag !== 'all') {
+                showCard = postTags.includes(activeTag);
+            }
+
+            // Filtrar por búsqueda
+            if (searchTerm && showCard) {
+                showCard = postTags.some(tag => 
+                    tag.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            if (showCard) {
+                cardElement.style.display = 'block';
+                cardElement.classList.add('fade-in');
+                visibleCount++;
+            } else {
+                cardElement.style.display = 'none';
+                cardElement.classList.remove('fade-in');
+            }
+        });
+
+        // Actualizar contador y mostrar/ocultar mensaje de no resultados
+        if (resultsCount) {
+            resultsCount.textContent = `Mostrando ${visibleCount} posts`;
+        }
+
+        if (noResultsMessage) {
+            if (visibleCount === 0) {
+                noResultsMessage.classList.remove('hidden');
+            } else {
+                noResultsMessage.classList.add('hidden');
+            }
+        }
+    }
+
+    // Event listeners para botones de tags
+    tagButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remover clase active de todos los botones
+            tagButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Agregar clase active al botón clickeado
+            this.classList.add('active');
+            
+            // Actualizar tag activo
+            activeTag = this.dataset.tag || 'all';
+            
+            // Limpiar búsqueda cuando se selecciona un tag
+            if (searchInput) {
+                searchInput.value = '';
+                searchTerm = '';
+            }
+            
+            // Filtrar posts
+            filterPosts();
+        });
+    });
+
+    // Event listener para búsqueda
+    searchInput?.addEventListener('input', function() {
+        searchTerm = this.value.trim();
+        
+        // Si hay búsqueda, desactivar filtro por tag
+        if (searchTerm) {
+            tagButtons.forEach(btn => btn.classList.remove('active'));
+            activeTag = 'all';
+        }
+        
+        filterPosts();
+    });
+
+    // Event listener para limpiar filtros
+    clearFiltersBtn?.addEventListener('click', function() {
+        // Limpiar búsqueda
+        if (searchInput) {
+            searchInput.value = '';
+            searchTerm = '';
+        }
+        
+        // Activar "Todos los posts"
+        tagButtons.forEach(btn => btn.classList.remove('active'));
+        const allButton = document.querySelector('[data-tag="all"]');
+        if (allButton) {
+            allButton.classList.add('active');
+        }
+        activeTag = 'all';
+        
+        // Mostrar todos los posts
+        filterPosts();
+    });
+
+    // Inicializar filtros
+    filterPosts();
+});
+</script>

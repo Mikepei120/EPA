@@ -1,0 +1,232 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import Image from '@components/ui/images/Image.astro'
+import { formatDate } from '@support/time'
+const { blog } = Astro.props
+interface Props {
+    blog: CollectionEntry<'posts'>
+}
+---
+<a
+    class="blog-card group relative block rounded-xl outline-none ring-zinc-500 transition duration-500 focus-visible:ring dark:ring-zinc-200 dark:focus:outline-none"
+    href={`/posts/${blog.slug}/`}
+    data-astro-prefetch="false"
+    data-tags={blog.data.tags?.join(',') || ''}
+>
+    <!-- Overlay de textura vintage -->
+    <div class="vintage-overlay"></div>
+    
+    <div class="relative w-full flex-shrink-0 overflow-hidden rounded-xl before:absolute before:inset-x-0 before:z-[1] before:size-full before:bg-gradient-to-t before:from-neutral-900/[.7]">
+        <Image
+            class="w-full h-full sm:h-[220px] md:h-[240px] start-0 top-0 size-full object-cover transition duration-500 group-hover:scale-110"
+            src={blog.data.banner}
+            alt={blog.data.title}
+            draggable="false"
+            loading="eager"
+            format="avif"
+            width="800"
+            height="460"
+        />
+    </div>
+    <h3 class="post-title mt-2 text-xl font-bold">
+        {blog.data.title}
+    </h3>
+    <p class="post-date mt-2 text-sm">
+        {formatDate(blog.data.pubDate)}
+    </p>
+    
+    <!-- Mostrar tags si existen -->
+    {blog.data.tags && blog.data.tags.length > 0 && (
+        <div class="post-tags mt-3 flex flex-wrap gap-1">
+            {blog.data.tags.map(tag => (
+                <span class="tag-badge px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                    #{tag}
+                </span>
+            ))}
+        </div>
+    )}
+</a>
+
+<style>
+.blog-card {
+    position: relative;
+    background-image: url('/src/images/paper-texture.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Sin borde dorado - eliminado */
+    border: none;
+    border-radius: 12px;
+    
+    /* Sombras estilo papel antiguo */
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+    /* Transiciones suaves */
+    transition: all 0.4s ease;
+    
+    /* Padding para el efecto de marco */
+    padding: 8px;
+    background-clip: padding-box;
+}
+
+/* Overlay sutil de textura vintage */
+.vintage-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(245, 245, 220, 0.3) 0%,
+        rgba(250, 235, 215, 0.2) 25%,
+        rgba(240, 230, 200, 0.3) 50%,
+        rgba(245, 240, 220, 0.2) 75%,
+        rgba(248, 243, 223, 0.3) 100%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: multiply;
+}
+
+/* Contenido sobre la textura */
+.blog-card > div,
+.blog-card > h3,
+.blog-card > p {
+    position: relative;
+    z-index: 2;
+}
+
+/* Efecto hover vintage con colores WW2 - FORZADO */
+.blog-card:hover {
+    transform: translateY(-3px) rotate(0.8deg);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.25),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.15);
+}
+
+.blog-card:hover .post-title,
+.blog-card:hover h3.post-title {
+    color: #454545 !important; /* Cambio a NEGRO en hover FORZADO */
+}
+
+.blog-card:hover .post-date,
+.blog-card:hover p.post-date,
+.blog-card:hover .text-sm {
+    color: var(--ww2-color-primary, #b3413e) !important; /* Cambio a ROJO en hover FORZADO */
+}
+
+/* Estilos WW2 Bites para texto - FORZAR ROJO Y NEGRO */
+.blog-card .post-title,
+.blog-card h3.post-title {
+    color: var(--ww2-color-primary, #b3413e) !important; /* ROJO WW2 Bites FORZADO */
+    font-family: var(--ww2-font-sans, 'Oswald', sans-serif) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blog-card .post-date,
+.blog-card p.post-date {
+    color: #454545 !important; /* NEGRO FORZADO - no beige */
+    font-family: var(--ww2-font-serif, 'Source Serif Pro', serif) !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+    font-size: 0.875rem !important; /* Tamaño small equivalente */
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos para los tags */
+.post-tags {
+    position: relative;
+    z-index: 2;
+}
+
+.tag-badge {
+    background-color: rgba(179, 65, 62, 0.1) !important;
+    color: var(--ww2-color-primary, #b3413e) !important;
+    border: 1px solid rgba(179, 65, 62, 0.3);
+    font-family: var(--ww2-font-sans, 'Oswald', sans-serif);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.blog-card:hover .tag-badge {
+    background-color: var(--ww2-color-primary, #b3413e) !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+/* Sobrescribir específicamente las clases de Tailwind */
+.blog-card .text-sm {
+    color: #454545 !important; /* NEGRO absoluto */
+}
+
+.blog-card .text-gray-600 {
+    color: #454545 !important; /* NEGRO absoluto */
+}
+
+/* Responsive - menos efecto en móviles */
+@media (max-width: 768px) {
+    .blog-card:hover {
+        transform: translateY(-2px) rotate(0.3deg);
+    }
+    
+    .blog-card {
+        padding: 6px;
+    }
+    
+    .post-tags {
+        margin-top: 0.5rem;
+    }
+    
+    .tag-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* Dark mode adjustments - MANTENER COLORES WW2 */
+@media (prefers-color-scheme: dark) {
+    .blog-card {
+        background-blend-mode: multiply;
+    }
+    
+    .vintage-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(245, 245, 220, 0.2) 0%,
+            rgba(250, 235, 215, 0.15) 25%,
+            rgba(240, 230, 200, 0.2) 50%,
+            rgba(245, 240, 220, 0.15) 75%,
+            rgba(248, 243, 223, 0.2) 100%
+        );
+    }
+    
+    .blog-card .post-title,
+    .blog-card h3.post-title {
+        color: var(--ww2-color-primary, #b3413e) !important; /* MANTENER ROJO en dark mode */
+    }
+    
+    .blog-card .post-date,
+    .blog-card p.post-date,
+    .blog-card .text-sm {
+        color: #454545 !important; /* MANTENER NEGRO en dark mode - NO beige */
+    }
+    
+    .tag-badge {
+        background-color: rgba(179, 65, 62, 0.2) !important;
+        color: #ff6b6b !important;
+        border-color: rgba(179, 65, 62, 0.4);
+    }
+}
+</style>

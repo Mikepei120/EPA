@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import BaseLayout from '@layouts/BaseLayout.astro'
+import BlogInsight from '@components/blog/BlogInsight.astro'
+import HeroSection from '@components/ui/sections/HeroSection.astro'
+import FeaturesSection from '@components/ui/sections/FeaturesSection.astro'
+import HeroSectionAlt from '@components/ui/sections/HeroSectionAlt.astro'
+
+// Obtener todos los posts ordenados por fecha
+const allPosts: CollectionEntry<'posts'>[] = (await getCollection('posts')).sort(
+    (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// Latest post para el Hero
+const latestPost = allPosts[0];
+
+// Posts para la sección "Latest Posts" (6 posts)
+const posts = allPosts.slice(0, 6);
+---
+
+<BaseLayout>
+    <HeroSection
+        title=`WW2 History in Bite-Sized Stories`
+        subTitle="Explore fascinating stories, untold events, and remarkable people from World War II. Our newsletter delivers exclusive content directly to your inbox every week."
+        primaryBtn="Join For Free"
+        primaryBtnURL="/posts"
+        alt="godruoyi's blog"
+        latestPost={latestPost}
+    />
+    <FeaturesSection />
+    <section class="mx-auto max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 2xl:max-w-full">
+        <div class="mx-auto mb-10 max-w-2xl text-center lg:mb-14">
+            <h2 class="text-3xl font-bold text-neutral-800 dark:text-neutral-200 md:text-4xl md:leading-tight">
+                Latest Post
+            </h2>
+            <p class="mt-1 text-pretty text-neutral-600 dark:text-neutral-400">
+                Always want to write something, but rarely actually do it
+            </p>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {
+                posts.map(b => (
+                    <BlogInsight blog={b} />
+                ))
+            }
+        </div>
+    </section>
+    <HeroSectionAlt
+        title="Fellow me on GitHub"
+        subTitle="I love open source and have some small tools on my GitHub. You can get me more by checking out my code"
+        url="https://github.com/godruoyi"
+    />
+</BaseLayout>

@@ -1,0 +1,274 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import Icon from '@components/ui/icons/icon.astro'
+import Image from '@components/ui/images/Image.astro'
+import { formatDate } from '@support/time'
+
+const { blog } = Astro.props
+interface Props {
+    blog: CollectionEntry<'posts'>
+}
+---
+<a
+    class="blog-insight group outline-none rounded-xl ring-zinc-500 transition duration-300 focus-visible:ring dark:ring-zinc-200 dark:focus:outline-none"
+    href={`/posts/${blog.slug}/`}
+    data-astro-prefetch
+>
+    <!-- Overlay de textura vintage -->
+    <div class="vintage-overlay"></div>
+    
+    <div class="aspect-w-16 aspect-h-10 relative overflow-hidden rounded-xl ">
+        <Image
+            class="w-full h-full sm:h-[220px] md:h-[240px] object-cover rounded-xl transition duration-500 ease-in-out group-hover:scale-105"
+            src={blog.data.banner}
+            alt={blog.data.title}
+            format="avif"
+            loading="lazy"
+            width="850"
+            height="440"
+        />
+    </div>
+    <div class="mt-7">
+        <h3 class="post-title text-xl font-bold">
+            {blog.data.title}
+         </h3>
+         
+         <!-- Meta información: Categoría y tiempo de lectura -->
+         <div class="post-meta flex items-center gap-4 mt-2 mb-3">
+            {blog.data.category && (
+                <span class="category-tag inline-flex items-center gap-1">
+                    📁 {blog.data.category}
+                </span>
+            )}
+            {blog.data["reading-time"] && (
+                <span class="reading-time inline-flex items-center gap-1">
+                    ⏱️ {blog.data["reading-time"]}
+                </span>
+            )}
+         </div>
+         
+        <p class="post-description mt-3">
+          {blog.data.description}
+        </p>
+        <p class="read-more-link mt-5 inline-flex items-center gap-x-1 font-medium decoration-2 group-hover:underline">
+            Read more <Icon name="arrowRightStatic" />
+        </p>
+    </div>
+</a>
+
+<style>
+.blog-insight {
+    position: relative;
+    background-image: url('/src/images/paper-texture.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Sin borde dorado - diseño limpio */
+    border: none;
+    border-radius: 12px;
+    
+    /* Sombras estilo papel antiguo */
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+    /* Transiciones suaves */
+    transition: all 0.4s ease;
+    
+    /* Padding para el efecto de marco */
+    padding: 8px;
+    background-clip: padding-box;
+}
+
+/* Overlay sutil de textura vintage */
+.vintage-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(245, 245, 220, 0.3) 0%,
+        rgba(250, 235, 215, 0.2) 25%,
+        rgba(240, 230, 200, 0.3) 50%,
+        rgba(245, 240, 220, 0.2) 75%,
+        rgba(248, 243, 223, 0.3) 100%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: multiply;
+}
+
+/* Contenido sobre la textura */
+.blog-insight > div {
+    position: relative;
+    z-index: 2;
+}
+
+/* Efecto hover vintage con colores WW2 */
+.blog-insight:hover {
+    transform: translateY(-3px) rotate(0.8deg);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.25),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Estilos WW2 Bites para texto - FORZAR ROJO Y NEGRO */
+.blog-insight .post-title,
+.blog-insight h3.post-title {
+    color: var(--ww2-color-primary, #b3413e) !important; /* ROJO WW2 Bites FORZADO */
+    font-family: var(--ww2-font-sans, 'Oswald', sans-serif) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Meta información: Categoría y tiempo de lectura */
+.blog-insight .post-meta {
+    position: relative;
+    z-index: 2;
+}
+
+.blog-insight .category-tag {
+    color: var(--ww2-color-primary, #b3413e) !important; /* ROJO para categoría */
+    font-family: var(--ww2-font-sans, 'Oswald', sans-serif) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    background-color: rgba(179, 65, 62, 0.1) !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    border: 1px solid rgba(179, 65, 62, 0.3) !important;
+}
+
+.blog-insight .reading-time {
+    color: #454545 !important; /* NEGRO para tiempo de lectura */
+    font-family: var(--ww2-font-serif, 'Source Serif Pro', serif) !important;
+    font-weight: 400 !important;
+    font-size: 0.875rem !important;
+    font-style: italic !important;
+}
+
+.blog-insight .post-description,
+.blog-insight p.post-description {
+    color: #454545 !important; /* NEGRO FORZADO - descripción */
+    font-family: var(--ww2-font-serif, 'Source Serif Pro', serif) !important;
+    font-weight: 400 !important;
+    line-height: 1.6 !important;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.05) !important;
+}
+
+.blog-insight .read-more-link,
+.blog-insight p.read-more-link {
+    color: var(--ww2-color-primary, #b3413e) !important; /* ROJO para "Read more" */
+    font-family: var(--ww2-font-sans, 'Oswald', sans-serif) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Sobrescribir clases específicas de Tailwind */
+.blog-insight .text-xl {
+    color: var(--ww2-color-primary, #b3413e) !important;
+}
+
+.blog-insight .text-neutral-600 {
+    color: #454545 !important;
+}
+
+.blog-insight .text-neutral-800 {
+    color: var(--ww2-color-primary, #b3413e) !important;
+}
+
+.blog-insight .text-orange-400 {
+    color: var(--ww2-color-primary, #b3413e) !important;
+}
+
+/* Efectos hover específicos */
+.blog-insight:hover .post-title,
+.blog-insight:hover h3.post-title {
+    color: #454545 !important; /* Cambio a NEGRO en hover */
+}
+
+.blog-insight:hover .category-tag {
+    color: #454545 !important; /* Cambio a NEGRO en hover */
+    background-color: rgba(69, 69, 69, 0.1) !important;
+    border-color: rgba(69, 69, 69, 0.3) !important;
+}
+
+.blog-insight:hover .reading-time {
+    color: var(--ww2-color-primary, #b3413e) !important; /* Cambio a ROJO en hover */
+}
+
+.blog-insight:hover .post-description,
+.blog-insight:hover p.post-description {
+    color: var(--ww2-color-primary, #b3413e) !important; /* Cambio a ROJO en hover */
+}
+
+.blog-insight:hover .read-more-link,
+.blog-insight:hover p.read-more-link {
+    color: #454545 !important; /* Cambio a NEGRO en hover */
+}
+
+/* Responsive - menos efecto en móviles */
+@media (max-width: 768px) {
+    .blog-insight:hover {
+        transform: translateY(-2px) rotate(0.3deg);
+    }
+    
+    .blog-insight {
+        padding: 6px;
+    }
+}
+
+/* Dark mode adjustments - MANTENER COLORES WW2 */
+@media (prefers-color-scheme: dark) {
+    .blog-insight {
+        background-blend-mode: multiply;
+    }
+    
+    .vintage-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(245, 245, 220, 0.2) 0%,
+            rgba(250, 235, 215, 0.15) 25%,
+            rgba(240, 230, 200, 0.2) 50%,
+            rgba(245, 240, 220, 0.15) 75%,
+            rgba(248, 243, 223, 0.2) 100%
+        );
+    }
+    
+    .blog-insight .post-title,
+    .blog-insight h3.post-title {
+        color: var(--ww2-color-primary, #b3413e) !important; /* MANTENER ROJO en dark mode */
+    }
+    
+    .blog-insight .category-tag {
+        color: var(--ww2-color-primary, #b3413e) !important; /* MANTENER ROJO en dark mode */
+        background-color: rgba(179, 65, 62, 0.15) !important;
+        border-color: rgba(179, 65, 62, 0.4) !important;
+    }
+    
+    .blog-insight .reading-time {
+        color: #454545 !important; /* MANTENER NEGRO en dark mode */
+    }
+    
+    .blog-insight .post-description,
+    .blog-insight p.post-description {
+        color: #454545 !important; /* MANTENER NEGRO en dark mode */
+    }
+    
+    .blog-insight .read-more-link,
+    .blog-insight p.read-more-link {
+        color: var(--ww2-color-primary, #b3413e) !important; /* MANTENER ROJO en dark mode */
+    }
+}
+</style>

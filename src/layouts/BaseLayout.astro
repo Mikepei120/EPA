@@ -1,0 +1,562 @@
+---
+import BaseHead from '@components/BaseHead.astro'
+import Footer from '@components/Footer.astro'
+import Header from '@components/Header.astro'
+import GoogleAnalytics from '@components/support/GoogleAnalytics.astro'
+import UmamiAnalytics from '@components/support/UmamiAnalytics.astro'
+import { SITE } from '@/config'
+
+interface Props {
+    title?: string
+    description?: string
+    ogImage?: any
+    lang?: string
+    structuredData?: object
+}
+
+const { title, description = SITE.description, ogImage, lang = 'en', structuredData } = Astro.props
+const normalizeTitle = !title ? SITE.title : `${title} | ${SITE.title}`
+---
+
+<html lang={lang} class="scrollbar-hide lenis lenis-smooth scroll-pt-16">
+    <head>
+        <title>{normalizeTitle}</title>
+        
+        <!-- Fuentes WW2 Bites -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+        
+        <BaseHead
+            title={normalizeTitle}
+            description={description}
+            ogImage={ogImage}
+            ogTitle={title === '' ? SITE.title : title}
+            ogDescription={description}
+            structuredData={structuredData}
+        />
+        
+        <script is:inline>
+        </script>
+        
+        <script is:inline src="/vendor/lenis/lenis1.1.5.min.js"></script>
+        <script is:inline>
+        const lenis = new Lenis()
+        function raf(time) {
+            lenis.raf(time)
+            requestAnimationFrame(raf)
+        }
+        requestAnimationFrame(raf)
+        </script>
+        
+        <GoogleAnalytics />
+        <UmamiAnalytics />
+    </head>
+    
+    <body style="background-color: #f4f3ee;">
+        <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+            <Header />
+            <main>
+                <slot />
+            </main>
+        </div>
+        <Footer />
+        
+        <style is:global>
+            /* ===== VARIABLES CSS WW2 BITES ===== */
+            :root {
+                --ww2-color-primary: #b3413e;
+                --ww2-color-background: #e6dfd1;
+                --ww2-color-text: #454545;
+                --ww2-color-white: #ffffff;
+                --ww2-font-serif: 'Source Serif Pro', serif;
+                --ww2-font-sans: 'Oswald', sans-serif;
+            }
+
+            /* ===== SELECCIÓN DE TEXTO PERSONALIZADA ===== */
+            ::selection {
+                background-color: var(--ww2-color-primary) !important; /* #b3413e */
+                color: #000000 !important; /* Negro */
+            }
+
+            ::-moz-selection {
+                background-color: var(--ww2-color-primary) !important; /* #b3413e */
+                color: #000000 !important; /* Negro */
+            }
+
+            /* ===== APLICAR FUENTES Y COLORES WW2 BITES ===== */
+            
+            /* Fuente base para el body y párrafos */
+            body {
+                font-family: var(--ww2-font-serif) !important;
+                color: var(--ww2-color-text) !important;
+                /* Mantener background gris original */
+            }
+
+            /* Fuente para títulos */
+            h1, h2, h3, h4, h5, h6 {
+                font-family: var(--ww2-font-sans) !important;
+                font-weight: 700 !important;
+                color: var(--ww2-color-primary) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+            }
+
+            /* Fuente para párrafos y texto general */
+            p, span, div, li, td, th, label, input, textarea, select {
+                font-family: var(--ww2-font-serif) !important;
+                color: var(--ww2-color-text) !important;
+            }
+
+            /* Enlaces */
+            a {
+                color: var(--ww2-color-primary) !important;
+            }
+
+            a:hover {
+                color: var(--ww2-color-text) !important;
+            }
+
+            /* Botones con fuente Oswald */
+            button, .btn, [role="button"] {
+                font-family: var(--ww2-font-sans) !important;
+                font-weight: 600 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+            }
+
+            /* Override de clases Tailwind específicas para colores de texto */
+            /* Mantener bg-neutral-200 original */
+
+            .text-neutral-700 {
+                color: var(--ww2-color-text) !important;
+            }
+
+            .text-neutral-800 {
+                color: var(--ww2-color-text) !important;
+            }
+
+            .text-neutral-600 {
+                color: var(--ww2-color-text) !important;
+            }
+
+            .text-neutral-900 {
+                color: var(--ww2-color-text) !important;
+            }
+
+            /* ===== ESTILOS DE BOTONES WW2 BITES ===== */
+            
+            /* Botón base - FORZAR SOBRE TAILWIND */
+            .btn,
+            button.btn,
+            a.btn,
+            [class*="btn"] {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0.5rem 1.5rem !important;
+                font-family: var(--ww2-font-sans) !important;
+                font-weight: 700 !important;
+                font-size: 1rem !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+                border: 2px solid !important;
+                border-radius: 0.5rem !important;
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Botón Primario - FORZAR */
+            .btn-primary,
+            button.btn-primary,
+            a.btn-primary {
+                background-color: var(--ww2-color-primary) !important;
+                border-color: var(--ww2-color-primary) !important;
+                color: var(--ww2-color-white) !important;
+            }
+
+            .btn-primary:hover,
+            button.btn-primary:hover,
+            a.btn-primary:hover {
+                background-color: transparent !important;
+                color: var(--ww2-color-primary) !important;
+                text-decoration: none !important;
+            }
+
+            /* Botón Secundario - FORZAR */
+            .btn-secondary,
+            button.btn-secondary,
+            a.btn-secondary {
+                background-color: transparent !important;
+                border-color: var(--ww2-color-primary) !important;
+                color: var(--ww2-color-primary) !important;
+            }
+
+            .btn-secondary:hover,
+            button.btn-secondary:hover,
+            a.btn-secondary:hover {
+                background-color: var(--ww2-color-primary) !important;
+                color: var(--ww2-color-white) !important;
+                text-decoration: none !important;
+            }
+
+            /* Botón Ghost - FORZAR */
+            .btn-ghost,
+            button.btn-ghost,
+            a.btn-ghost {
+                background-color: transparent !important;
+                border-color: transparent !important;
+                color: var(--ww2-color-text) !important;
+            }
+
+            .btn-ghost:hover,
+            button.btn-ghost:hover,
+            a.btn-ghost:hover {
+                color: var(--ww2-color-primary) !important;
+                text-decoration: none !important;
+            }
+
+            /* ===== VARIACIONES DE TAMAÑO - FORZAR ===== */
+
+            /* Botón pequeño */
+            .btn-sm,
+            button.btn-sm,
+            a.btn-sm {
+                padding: 6px 16px !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* Botón grande */
+            .btn-lg,
+            button.btn-lg,
+            a.btn-lg {
+                padding: 12px 32px !important;
+                font-size: 1.125rem !important;
+            }
+
+            /* Botón extra grande */
+            .btn-xl,
+            button.btn-xl,
+            a.btn-xl {
+                padding: 16px 40px !important;
+                font-size: 1.25rem !important;
+            }
+
+            /* ===== VARIACIONES DE ESTILO - FORZAR ===== */
+
+            /* Botón con esquinas más redondeadas */
+            .btn-rounded,
+            button.btn-rounded,
+            a.btn-rounded {
+                border-radius: 50px !important;
+            }
+
+            /* Botón con esquinas más cuadradas */
+            .btn-square,
+            button.btn-square,
+            a.btn-square {
+                border-radius: 4px !important;
+            }
+
+            /* Botón sin bordes redondeados */
+            .btn-sharp,
+            button.btn-sharp,
+            a.btn-sharp {
+                border-radius: 0 !important;
+            }
+
+            /* ===== VARIACIONES TEMÁTICAS WW2 ===== */
+
+            /* Botón estilo militar */
+            .btn-military {
+                background-color: #4a5d23 !important; /* Verde militar */
+                border-color: #4a5d23 !important;
+                color: #ffffff !important;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+            }
+
+            .btn-military:hover {
+                background-color: transparent !important;
+                color: #4a5d23 !important;
+                text-decoration: none !important;
+            }
+
+            /* Botón estilo vintage */
+            .btn-vintage {
+                background-color: #8B4513 !important; /* Marrón vintage */
+                border-color: #8B4513 !important;
+                color: #f5f5dc !important;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.2) !important;
+            }
+
+            .btn-vintage:hover {
+                background-color: transparent !important;
+                color: #8B4513 !important;
+                text-decoration: none !important;
+            }
+
+            /* Botón con efecto de relieve */
+            .btn-relief {
+                box-shadow: 
+                    inset 0 1px 0 rgba(255,255,255,0.2),
+                    0 2px 4px rgba(0,0,0,0.1) !important;
+            }
+
+            .btn-relief:hover {
+                box-shadow: 
+                    inset 0 1px 0 rgba(255,255,255,0.1),
+                    0 1px 2px rgba(0,0,0,0.1) !important;
+                transform: translateY(1px) !important;
+            }
+
+            /* ===== ESTADOS ESPECIALES ===== */
+
+            /* Botón deshabilitado */
+            .btn:disabled,
+            .btn-disabled {
+                opacity: 0.5 !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+            }
+
+            /* Botón de carga */
+            .btn-loading {
+                position: relative !important;
+                color: transparent !important;
+            }
+
+            .btn-loading::after {
+                content: '' !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                width: 16px !important;
+                height: 16px !important;
+                margin: -8px 0 0 -8px !important;
+                border: 2px solid transparent !important;
+                border-top-color: currentColor !important;
+                border-radius: 50% !important;
+                animation: ww2-spin 1s linear infinite !important;
+            }
+
+            @keyframes ww2-spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Botón de ancho completo */
+            .btn-full {
+                width: 100% !important;
+            }
+
+            /* Mantener estilos de scrollbar originales */
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            
+            html.lenis,
+            html.lenis body {
+                height: auto;
+            }
+            
+            .lenis.lenis-smooth {
+                scroll-behavior: auto !important;
+            }
+            
+            .lenis.lenis-smooth [data-lenis-prevent] {
+                overscroll-behavior: contain;
+            }
+            
+            .lenis.lenis-stopped {
+                overflow: hidden;
+            }
+            
+            .lenis.lenis-scrolling iframe {
+                pointer-events: none;
+            }
+
+            /* Asegurar que las fuentes se carguen correctamente */
+            @font-face {
+                font-family: 'Source Serif Pro';
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: 'Oswald';
+                font-display: swap;
+            }
+
+            /* ===== AUMENTAR FUENTES EN MÓVIL (+3px) ===== */
+            @media (max-width: 768px) {
+                /* Fuente base del body */
+                body {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* Títulos - incrementar según su tamaño base */
+                h1 {
+                    font-size: calc(2.5rem + 3px) !important; /* ~40px + 3px */
+                    line-height: 1.4 !important; /* Más espacio entre líneas solo en móvil */
+                }
+
+                h2 {
+                    font-size: calc(2rem + 3px) !important; /* ~32px + 3px */
+                    line-height: 1.4 !important; /* Más espacio entre líneas solo en móvil */
+                }
+
+                h3 {
+                    font-size: calc(1.75rem + 3px) !important; /* ~28px + 3px */
+                    line-height: 1.4 !important; /* Más espacio entre líneas solo en móvil */
+                }
+
+                h4 {
+                    font-size: calc(1.5rem + 3px) !important; /* ~24px + 3px */
+                    line-height: 1.4 !important; /* Más espacio entre líneas solo en móvil */
+                }
+
+                h5 {
+                    font-size: calc(1.25rem + 3px) !important; /* ~20px + 3px */
+                    line-height: 1.4 !important; /* Más espacio entre líneas solo en móvil */
+                }
+
+                h6 {
+                    font-size: calc(1rem + 3px) !important; /* ~16px + 3px */
+                    line-height: 1.4 !important; /* Más espacio entre líneas solo en móvil */
+                }
+
+                /* Texto general - párrafos, spans, divs, etc. */
+                p, span, div:not(.btn):not([class*="btn"]), li, td, th, label, input, textarea, select {
+                    font-size: calc(1rem + 3px) !important; /* ~16px + 3px */
+                }
+
+                /* Enlaces */
+                a:not(.btn):not([class*="btn"]) {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* ===== BOTONES - AUMENTAR TAMAÑOS ===== */
+                
+                /* Botón base */
+                .btn,
+                button.btn,
+                a.btn,
+                [class*="btn"]:not(.btn-sm):not(.btn-lg):not(.btn-xl) {
+                    font-size: calc(1rem + 3px) !important; /* ~16px + 3px */
+                }
+
+                /* Botón pequeño */
+                .btn-sm,
+                button.btn-sm,
+                a.btn-sm {
+                    font-size: calc(0.875rem + 3px) !important; /* ~14px + 3px */
+                }
+
+                /* Botón grande */
+                .btn-lg,
+                button.btn-lg,
+                a.btn-lg {
+                    font-size: calc(1.125rem + 3px) !important; /* ~18px + 3px */
+                }
+
+                /* Botón extra grande */
+                .btn-xl,
+                button.btn-xl,
+                a.btn-xl {
+                    font-size: calc(1.25rem + 3px) !important; /* ~20px + 3px */
+                }
+
+                /* ===== ELEMENTOS ADICIONALES QUE PUEDEN TENER TEXTO ===== */
+                
+                /* Navegación */
+                nav, nav a, nav span {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* Footer */
+                footer, footer p, footer span, footer a {
+                    font-size: calc(0.875rem + 3px) !important; /* ~14px + 3px */
+                }
+
+                /* Texto pequeño */
+                small, .text-sm {
+                    font-size: calc(0.75rem + 3px) !important; /* ~12px + 3px */
+                }
+
+                /* Texto extra pequeño */
+                .text-xs {
+                    font-size: calc(0.625rem + 3px) !important; /* ~10px + 3px */
+                }
+
+                /* Texto grande */
+                .text-lg {
+                    font-size: calc(1.125rem + 3px) !important; /* ~18px + 3px */
+                }
+
+                /* Texto extra grande */
+                .text-xl {
+                    font-size: calc(1.25rem + 3px) !important; /* ~20px + 3px */
+                }
+
+                /* ===== ELEMENTOS DE FORMULARIO ===== */
+                
+                /* Inputs y textareas ya están incluidos arriba, pero por si acaso */
+                input[type="text"],
+                input[type="email"],
+                input[type="password"],
+                input[type="number"],
+                input[type="tel"],
+                input[type="url"],
+                textarea,
+                select {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* Placeholders */
+                input::placeholder,
+                textarea::placeholder {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* ===== ELEMENTOS DE LISTA ===== */
+                
+                /* Items de lista */
+                ul li, ol li {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* ===== TABLA ===== */
+                
+                /* Celdas de tabla ya están incluidas arriba */
+                table {
+                    font-size: calc(1rem + 3px) !important;
+                }
+
+                /* ===== ELEMENTOS ESPECIALES ===== */
+                
+                /* Códigos */
+                code, pre {
+                    font-size: calc(0.875rem + 3px) !important;
+                }
+
+                /* Blockquotes */
+                blockquote {
+                    font-size: calc(1.125rem + 3px) !important;
+                }
+
+                /* Citations */
+                cite {
+                    font-size: calc(0.875rem + 3px) !important;
+                }
+            }
+        </style>
+    </body>
+</html>

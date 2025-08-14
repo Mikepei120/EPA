@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import MainSection from '@/components/ui/sections/MainSection.astro'
+import BlogCategoryCard from '@/components/blog/BlogCategoryCard.astro'
+import { timeago } from '@/support/time'
+import { SITE } from '@/config'
+
+const postMap: Map<string, CollectionEntry<'posts'>[]> = (await getCollection('posts')).sort(
+    (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+).reduce((acc, obj) => {
+    let posts = acc.get(obj.data.category)
+    if (!posts) {
+        posts = []
+    }
+    posts.push(obj)
+    acc.set(obj.data.category, posts)
+    return acc
+}, new Map<string, CollectionEntry<'posts'>[]>())
+
+const categories = (await getCollection('categories')).sort((a, b) => {
+    const aCount = postMap.get(a.slug)?.length ?? 0
+    const bCount = postMap.get(b.slug)?.length ?? 0
+    return bCount - aCount
+})
+
+const description = 'Here are some categories that godruoyi is interested in, including Laravel, Golang, and her life.'
+const URL = Astro.url.href
+---
+
+<BaseLayout
+    title="All Categories"
+    description={description}
+    structuredData={{
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        'inLanguage': 'en-US',
+        '@id': URL,
+        'url': URL,
+        'name': `All Categories - ${SITE.title}`,
+        'description': description,
+        'isPartOf': {
+            '@type': 'WebSite',
+            'url': SITE.url,
+            'name': SITE.title,
+            'description': SITE.description,
+        },
+    }}
+>
+    <MainSection title="Categories" subTitle={description} />
+    <section class="mx-auto px-6 py-12 sm:px-8 lg:px-12 lg:pt-12 lg:py-16 2xl:max-w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            {
+                categories.map((category) => (
+                    <BlogCategoryCard
+                        slug={category.slug}
+                        title={category.data.title}
+                        description={category.data.description}
+                        count={postMap.get(category.slug)?.length ?? 0}
+                        publishDate={timeago(postMap.get(category.slug)?.[0]?.data?.pubDate)}
+                    />
+                ))
+            }
+        </div>
+    </section>
+</BaseLayout>
