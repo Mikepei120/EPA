@@ -1,4 +1,4 @@
---- 
+---
 import { Image } from 'astro:assets'
 import atlanticImage from '@/images/atlantic.webp'
 import easternFrontImage from '@/images/eastern-front.webp'
@@ -20,43 +20,78 @@ interface Props {
     }
 }
 
-const { slug } = Astro.props
+const { slug, title, description, count } = Astro.props
 
-// Mapeo de slugs a imágenes - Verificar que coincidan exactamente
+// Mapeo de slugs a imágenes
 const categoryImages: Record<string, any> = {
     'atlantic': atlanticImage,
     'eastern-front': easternFrontImage,
     'north-afrika': northAfrikaImage,
-    'northafrika': northAfrikaImage, // Agregamos ambas variantes por si acaso
+    'northafrika': northAfrikaImage,
     'pacific': pacificImage,
     'western-europe': westernEuropeImage,
 }
 
 const categoryImage = categoryImages[slug]
-
-// Debug: mostrar en consola qué slug estamos buscando
 console.log('Buscando imagen para slug:', slug, 'Imagen encontrada:', !!categoryImage)
 ---
 
 <div class="px-2 py-3 sm:px-4 sm:py-4">
     <a 
         href={`/categories/${slug}`}
-        class="block w-full h-64 sm:h-64 md:h-72 overflow-hidden transition-transform duration-300 hover:scale-105"
+        class="group block w-full bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
     >
-        {categoryImage ? (
-            <Image 
-                src={categoryImage}
-                alt={slug}
-                class="w-full h-full object-cover"
-                widths={[400, 600, 800]}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                loading="lazy"
-                format="webp"
-            />
-        ) : (
-            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span class="text-gray-500">No image: {slug}</span>
+        <!-- Contenedor de imagen -->
+        <div class="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+            {categoryImage ? (
+                <Image 
+                    src={categoryImage}
+                    alt={title}
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    widths={[400, 600, 800]}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    loading="lazy"
+                    format="webp"
+                />
+            ) : (
+                <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+                    <span class="text-gray-500 dark:text-gray-400">No image: {slug}</span>
+                </div>
+            )}
+            
+            <!-- Overlay con contador de artículos -->
+            <div class="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium">
+                {count} {count === 1 ? 'artículo' : 'artículos'}
             </div>
-        )}
+        </div>
+
+        <!-- Contenido de la card -->
+        <div class="p-4 sm:p-6">
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                {title}
+            </h3>
+            
+            <p class="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed line-clamp-3">
+                {description}
+            </p>
+
+            <!-- Indicador de enlace -->
+            <div class="mt-4 flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium group-hover:translate-x-1 transition-transform duration-200">
+                Ver categoría
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </div>
+        </div>
     </a>
 </div>
+
+<style>
+    /* Utilidad para limitar líneas de texto */
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
